@@ -18,5 +18,5 @@ Configuration for [NetBSD](https://www.netbsd.org/)
 services.
 
 ## Other Comments
-*[Support NetBSD] (https://www.netbsd.org/donations/) or
+*[Support NetBSD](https://www.netbsd.org/donations/) or
 [via github](https://github.com/sponsors/NetBSD)*
