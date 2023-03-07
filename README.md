@@ -1,0 +1,2 @@
+# nconfig
+NetBSD Configuration Items 
