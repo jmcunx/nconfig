@@ -6,7 +6,7 @@ License [unlicense](https://unlicense.org)
 
 ## bu\_vnstat.sh
 To backup
-[vnstat port](https://openports.pl/path/net/vnstat)
+[vnstat port](https://pkgsrc.se/net/vnstat)
 databases on
 [NetBSD](https://www.netbsd.org/).
 
