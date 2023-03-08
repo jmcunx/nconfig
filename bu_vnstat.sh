@@ -3,7 +3,11 @@
 # backup vnstat database in case of a crash
 #        copy to /usr/local/bin/bu_vnstat.sh
 # and add to root cron as
-#    47 19 * * * /usr/local/bin/bu_vnstat.sh 
+#    47 19 * * * /usr/local/bin/bu_vnstat.sh
+# to backup the databases once per day
+#
+# change variable "g_dir_bhome" to the Directory where Backups
+# will go
 #
 
 f_cpfile()
