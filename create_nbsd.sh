@@ -17,7 +17,7 @@ f_make_login()
 
 cat << EOF
 #!/bin/csh
-# Generated YYYYMMDD HHMMSS
+# Generated `date '+%Y-%m-%d %H:%M:%S'`
 # by $sname
 #
 
@@ -54,7 +54,7 @@ f_make_profile()
     l_ip="$1"
 cat << EOF
 #!/bin/sh
-# Generated YYYYMMDD HHMMSS
+# Generated `date '+%Y-%m-%d %H:%M:%S'`
 # by $sname
 #
 
