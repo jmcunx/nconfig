@@ -25,21 +25,20 @@ if ( ! "\`id -u\`" == "0" ) then
     if ( ! \$?USER ) then
 	setenv USER "\`id -un\`"
     endif
-    setenv TMPDIR /tmp/\$USER
-    if ( ! -d \$TMPDIR ) then
-	mkdir \$TMPDIR >& /dev/null && chmod 700 \$TMPDIR
+    if ( -d /tmp/\$USER ) then
+	setenv TMPDIR      /tmp/\$USER
+	setenv TMPDIR      \$TMPDIR
+	setenv TMP         \$TMPDIR
+	setenv TEMP        \$TMPDIR
+	setenv TEMPDIR     \$TMPDIR
+	setenv TMUX_TMPDIR \$TMPDIR
     endif
     setenv DISTRO           NetBSD
     setenv DOMAIN           hsd1.ma.comcast.net
     setenv HOST             $HOST
-    setenv HOSTNAME         $HOST.hsd1.ma.comcast.net
+    setenv HOSTNAME         $HOST.$DOMAIN
     setenv OS               NetBSD
     setenv WORK_WORKSTATION NO
-    setenv TMPDIR           \$TMPDIR
-    setenv TMP              \$TMPDIR
-    setenv TEMP             \$TMPDIR
-    setenv TEMPDIR          \$TMPDIR
-    setenv TMUX_TMPDIR      \$TMPDIR
 EOF
     if test "$l_ip" != ""
     then
@@ -67,25 +66,23 @@ then
                 USER="\`id -un\`"
                 export USER
             fi
-	    TMPDIR="/tmp/\$USER"
-            export TMPDIR
-            if test ! -d "\$TMPDIR"
+            if test -d "/tmp/\$USER"
             then
-                mkdir "\$TMPDIR" 2> /dev/null && chmod 700 "\$TMPDIR"
+		TMPDIR="/tmp/\$USER"
+		TMPDIR=\$TMPDIR
+		TMP=\$TMPDIR
+		TEMP=\$TMPDIR
+		TEMPDIR=\$TMPDIR
+		TMUX_TMPDIR=\$TMPDIR
+		export TMPDIR TMP TEMP TEMPDIR TMUX_TMPDIR
             fi
             DISTRO=NetBSD
             DOMAIN=hsd1.ma.comcast.net
             HOST=$HOST
-            HOSTNAME=$HOST.hsd1.ma.comcast.net
+            HOSTNAME=$HOST.$DOMAIN
             OS=NetBSD
             WORK_WORKSTATION=NO
-            TMPDIR=\$TMPDIR
-            TMP=\$TMPDIR
-            TEMP=\$TMPDIR
-            TEMPDIR=\$TMPDIR
-            TMUX_TMPDIR=\$TMPDIR
             export DISTRO DOMAIN HOST HOSTNAME IP OS WORK_WORKSTATION
-            export TMPDIR TMP TEMP TEMPDIR TMUX_TMPDIR
 EOF
 
     if test "$l_ip" != ""
