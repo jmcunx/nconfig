@@ -28,15 +28,6 @@ My [rc.conf](https://man.netbsd.org/rc.conf.5)
 to start [NetBSD](https://www.netbsd.org/)
 services.
 
-## rc.local
-My [rc.local](https://man.netbsd.org/rc.local.8),
-main purpose is to create user specific
-Temporary Directories (TMPDIR).
-Users should add source files created by
-[create\_nbsd.sh](https://github.com/jmcunx/nconfig/blob/main/create_nbsd.sh)
-to their ~/.login, and/or ~/.shrc and/or ~/.profile
-depending upon their shell.
-
 ## Other Comments
 **[Support NetBSD](https://www.netbsd.org/donations/) or
 [via github](https://github.com/sponsors/NetBSD)**
