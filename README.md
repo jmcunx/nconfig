@@ -23,6 +23,10 @@ to execute on reboot.
 [dmesg](https://man.netbsd.org/dmesg.8) for NetBSD 9.3 from
 my ThinkPad T420.
 
+## lid\_switch
+Activites to perform when going to
+[sleep](https://en.wikipedia.org/wiki/Sleep_mode)
+
 ## rc.conf
 My [rc.conf](https://man.netbsd.org/rc.conf.5)
 to start [NetBSD](https://www.netbsd.org/)

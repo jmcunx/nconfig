@@ -1,0 +1,43 @@
+#!/bin/sh -
+#
+#	$NetBSD: lid_switch,v 1.9 2010/12/31 09:33:10 jruoho Exp $
+#
+# Generic script for lid switch events.
+#
+# Arguments passed by powerd(8):
+#
+#	device event
+#----------------------------------------------------------------------
+# from:
+# https://www.netbsd.org/docs/guide/en/chap-power.html#chap-power-ex-powerd-lid_switch
+#
+# merge with: /etc/powerd/scripts/lid_switch
+#
+
+case "${2}" in
+pressed)
+
+	# If you want to put the system into sleep when the lid
+	# is closed, see the sleep_button -script for examples.
+	#
+        logger -p info "${0}: SLEEP starting ${2} on device ${1}" >&1
+	wsconsctl -d -w backlight=0 >/dev/null
+        # Lock the X11 display to prevent tampering
+        DISPLAY=:0 /usr/pkg/bin/xlock -mode blank &
+        # Wait for 2 seconds
+        sleep 2
+        # Suspend
+        /sbin/sysctl -w hw.acpi.sleep.state=3
+        exit 0
+        ;;
+
+released)
+        logger -p info "${0}: SLEEP waking up ${2} on device ${1}" >&1
+	wsconsctl -d -w backlight=1 >/dev/null
+        exit 0
+        ;;
+
+*)
+        logger -p warning "${0}: SLEEP unsupported event ${2} on device ${1}" >&1
+        exit 1
+esac
