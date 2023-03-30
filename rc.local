@@ -1,0 +1,44 @@
+#	$NetBSD: rc.local,v 1.32 2008/06/11 17:14:52 perry Exp $
+#	originally from: @(#)rc.local	8.3 (Berkeley) 4/28/94
+#
+# This file is (nearly) the last thing invoked by /etc/rc during a
+# normal boot, via /etc/rc.d/local.
+#
+# It is intended to be edited locally to add site-specific boot-time
+# actions, such as starting locally installed daemons.
+#
+# An alternative option is to create site-specific /etc/rc.d scripts.
+#
+# Note: install to /etc/rc.local as mode 644
+#       this is sourced in, so NO exit statements
+#
+
+echo -n 'Starting local daemons:'
+
+# Add your local daemons here, eg:
+#
+#if [ -x /path/to/daemon ]; then
+#	/path/to/daemon args
+#fi
+
+#--- create local tmp dirs
+if test ! -d "/tmp/root"
+then
+    mkdir /tmp/root
+    chown root:wheel /tmp/root
+    chmod 700 /tmp/root
+fi
+if test ! -d "/tmp/jmccue"
+then
+    mkdir /tmp/jmccue
+    chown jmccue:jmccue /tmp/jmccue
+    chmod 700 /tmp/jmccue
+fi
+if test ! -d "/tmp/pub"
+then
+    mkdir /tmp/pub
+    chown pub:pub /tmp/pub
+    chmod 700 /tmp/pub
+fi
+
+echo '.'

@@ -32,6 +32,13 @@ My [rc.conf](https://man.netbsd.org/rc.conf.5)
 to start [NetBSD](https://www.netbsd.org/)
 services.
 
+## rc.local
+My [rc.conf](https://man.netbsd.org/rc.local)
+to start [NetBSD](https://www.netbsd.org/)
+custom services.
+In this case, it only creates Temp Directories
+for each users under /tmp.
+
 ## Other Comments
 **[Support NetBSD](https://www.netbsd.org/donations/) or
 [via github](https://github.com/sponsors/NetBSD)**
