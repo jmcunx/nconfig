@@ -23,26 +23,38 @@ cat << EOF
 
 if ( ! "\`id -u\`" == "0" ) then
     if ( ! \$?USER ) then
-	setenv USER "\`id -un\`"
+        setenv USER "\`id -un\`"
     endif
-    if ( -d /tmp/\$USER ) then
-	setenv TMPDIR      /tmp/\$USER
-	setenv TMPDIR      \$TMPDIR
-	setenv TMP         \$TMPDIR
-	setenv TEMP        \$TMPDIR
-	setenv TEMPDIR     \$TMPDIR
-	setenv TMUX_TMPDIR \$TMPDIR
+    if ( -d /mnt/tmpfs ) then
+        setenv TMPDIR /mnt/tmpfs/\$USER
+    else
+        setenv TMPDIR /tmp/\$USER
     endif
+    if ( -d /mnt/mfs ) then
+        setenv RAMDISK /mnt/mfs/\$USER
+    else
+        setenv RAMDISK /tmp/\$USER
+    endif
+    setenv TMP              \$TMPDIR
+    setenv TEMP             \$TMPDIR
+    setenv TEMPDIR          \$TMPDIR
+    setenv TMUX_TMPDIR      \$TMPDIR
     setenv DISTRO           NetBSD
-    setenv DOMAIN           hsd1.ma.comcast.net
+    setenv DOMAIN           jmcunx.com
     setenv HOST             $HOST
     setenv HOSTNAME         $HOST.$DOMAIN
     setenv OS               NetBSD
     setenv WORK_WORKSTATION NO
+    if ( ! -d \$TMPDIR ) then
+        mkdir \$TMPDIR >& /dev/null && chmod 700 \$TMPDIR
+    endif
+    if ( ! -d \$RAMDISK ) then
+        mkdir \$RAMDISK >& /dev/null && chmod 700 \$RAMDISK
+    endif
 EOF
     if test "$l_ip" != ""
     then
-	echo "    setenv IP               $l_ip"
+        echo "    setenv IP               $l_ip"
     fi
     echo "endif"
 
@@ -66,29 +78,44 @@ then
                 USER="\`id -un\`"
                 export USER
             fi
-            if test -d "/tmp/\$USER"
+            if test -d "/mnt/tmpfs"
             then
-		TMPDIR="/tmp/\$USER"
-		TMPDIR=\$TMPDIR
-		TMP=\$TMPDIR
-		TEMP=\$TMPDIR
-		TEMPDIR=\$TMPDIR
-		TMUX_TMPDIR=\$TMPDIR
-		export TMPDIR TMP TEMP TEMPDIR TMUX_TMPDIR
+                TMPDIR="/mnt/tmpfs/\$USER"
+            else
+                TMPDIR="/tmp/\$USER"
             fi
+            if test -d "/mnt/mfs"
+            then
+                RAMDISK="/mnt/mfs/\$USER"
+            else
+                RAMDISK="/tmp/\$USER"
+            fi
+            TMP=\$TMPDIR
+            TEMP=\$TMPDIR
+            TEMPDIR=\$TMPDIR
+            TMUX_TMPDIR=\$TMPDIR
+            export TMPDIR TMP TEMP TEMPDIR TMUX_TMPDIR RAMDISK
             DISTRO=NetBSD
-            DOMAIN=hsd1.ma.comcast.net
+            DOMAIN=jmcunx.com
             HOST=$HOST
             HOSTNAME=$HOST.$DOMAIN
             OS=NetBSD
             WORK_WORKSTATION=NO
             export DISTRO DOMAIN HOST HOSTNAME IP OS WORK_WORKSTATION
+            if test ! -d "\$TMPDIR"
+            then
+                mkdir "\$TMPDIR" 2> /dev/null && chmod 700 "\$TMPDIR"
+            fi
+            if test ! -d "\$RAMDISK"
+            then
+                mkdir \$RAMDISK 2> /dev/null && chmod 700 \$RAMDISK
+            fi
 EOF
 
     if test "$l_ip" != ""
     then
-	echo "            IP=$l_ip"
-	echo "            export IP"
+        echo "            IP=$l_ip"
+        echo "            export IP"
     fi
 cat << EOF
             ;;
@@ -109,42 +136,42 @@ f_generate()
     l_gen_ecode="0"
 
     case "$HOST" in
-	"neutron")
-	    l_gen_wdev="iwn0"
-	    l_gen_wother="wm0"
-	    ;;
-	*)
-	    echo "E003: $HOST not supported"
-	    return
-	    ;;
+        "neutron")
+            l_gen_wdev="iwn0"
+            l_gen_wother="wm0"
+            ;;
+        *)
+            echo "E003: $HOST not supported"
+            return
+            ;;
     esac
 
     if test "`id -u`" = "0"
     then
-	l_gen_profile=/usr/local/bin/jmccue-custom.sh
-	l_gen_login=/usr/local/bin/jmccue-custom.csh
+        l_gen_profile=/usr/local/bin/jmccue-custom.sh
+        l_gen_login=/usr/local/bin/jmccue-custom.csh
     else
-	if test -d "$TMPDIR"
-	then
-	    l_gen_profile=$TMPDIR/jmccue-custom.sh
-	    l_gen_login=$TMPDIR/jmccue-custom.csh
-	else
-	    l_gen_profile=$HOME/jmccue-custom.sh
-	    l_gen_login=$HOME/jmccue-custom.csh
-	fi
+        if test -d "$TMPDIR"
+        then
+            l_gen_profile=$TMPDIR/jmccue-custom.sh
+            l_gen_login=$TMPDIR/jmccue-custom.csh
+        else
+            l_gen_profile=$HOME/jmccue-custom.sh
+            l_gen_login=$HOME/jmccue-custom.csh
+        fi
     fi
 
     /sbin/ifconfig "$l_gen_wdev" > /dev/null 2>&1
     l_gen_ecode="$?"
     if test "$l_gen_ecode" -ne "0" -a "$l_gen_wother" != ""
     then
-	l_gen_wdev="$l_gen_wother"
-	/sbin/ifconfig "$l_gen_wdev" > /dev/null 2>&1
-	l_gen_ecode="$?"
+        l_gen_wdev="$l_gen_wother"
+        /sbin/ifconfig "$l_gen_wdev" > /dev/null 2>&1
+        l_gen_ecode="$?"
     fi
     if test "$l_gen_ecode" -eq "0"
     then
-	l_gen_ip=`/sbin/ifconfig "$l_gen_wdev" | grep 'inet ' | head -n 1 | awk '{print $2}' | awk -F '/' '{print $1}'`
+        l_gen_ip=`/sbin/ifconfig "$l_gen_wdev" | grep 'inet ' | head -n 1 | awk '{print $2}' | awk -F '/' '{print $1}'`
     fi
 
     f_make_login "$l_gen_ip"   > $l_gen_login
