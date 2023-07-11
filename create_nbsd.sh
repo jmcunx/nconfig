@@ -140,6 +140,10 @@ f_generate()
             l_gen_wdev="iwn0"
             l_gen_wother="wm0"
             ;;
+        "jmcnet1")
+            l_gen_wdev="ex0"
+            l_gen_wother="ex0"
+            ;;
         *)
             echo "E003: $HOST not supported"
             return
