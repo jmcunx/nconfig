@@ -67,6 +67,7 @@ f_bu_netbsd()
 	f_cpfile "$g_dir_vnstat/bge0"      "$g_dir_bu/bge0.$HOST"
 	f_cpfile "$g_dir_vnstat/ath0"      "$g_dir_bu/ath0.$HOST"
 	f_cpfile "$g_dir_vnstat/wm0"       "$g_dir_bu/wm0.$HOST"
+	f_cpfile "$g_dir_vnstat/ex0"       "$g_dir_bu/ex0.$HOST"
 	if test "$l_rcvnstat" -eq "0"
 	then
 	    /usr/sbin/service vnstatd start > /dev/null 2>&1
